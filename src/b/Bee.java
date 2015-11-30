@@ -12,7 +12,7 @@ public class Bee {
 		BigInteger [] fibb=new BigInteger[1000];
 		fibb[0]=BigInteger.valueOf(1L);
 		fibb[1]=BigInteger.valueOf(1L);
-		for (int i = 2; i < 1000; i++) {
+		for (int i = 2; i < 1000; i++  ) {
 			fibb[i]=fibb[i-1].add(fibb[i-2]);
 		}
 		Scanner scanner=new Scanner(System.in);
