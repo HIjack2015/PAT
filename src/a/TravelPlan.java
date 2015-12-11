@@ -1,5 +1,6 @@
 package a;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,74 +19,71 @@ public class TravelPlan {
 		int cityCount = scanner.nextInt();
 		int lineCount = scanner.nextInt();
 		int fromCity = scanner.nextInt();
+
 		toCity = scanner.nextInt();
-		lineMap = new HashMap<Integer, List<Line>>();
+		int useCityCount = toCity - fromCity + 1;
+		CostAndLength[][] arr = new CostAndLength[useCityCount][useCityCount];
 		for (int i = lineCount; i > 0;) {
 			String input = scanner.nextLine();
 			if (input.length() < 2) {
 				continue;
 			}
 			Line line = new Line(input);
-			List<Line> list = lineMap.get(line.from);
-			if (list == null) {
-				list = new LinkedList<Line>();
-				lineMap.put(line.from, list);
-			}
-			list.add(line);
+			arr[line.from][line.to] = new CostAndLength(line.length, line.cost);
 			i--;
 		}
-
-		// getLengthAndCost(0, 0, fromCity, "0 ");
-
-		// System.out.println(minLine + currentMinLength + " " +
-		// currentMinCost);
-		useStack();
-	}
-
-	public static void useStack() {
-
-		Stack<Line> stack = new Stack<Line>();
-		stack.add(new Line("0 0 0 0"));
-		do {
-			Line currentPosition = stack.pop();
-			List<Line> list = lineMap.get(currentPosition.from);
-			for (Line line : list) {
-				List<Line> list2 = lineMap.get(currentPosition.to);
-				for (Line line2 : list2) {
-					stack.add(line2);
+		CostAndLength minLength = new CostAndLength(100000, 100000);
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr.length; j++) {
+				if (arr[i][j] == null) {
+					arr[i][j] = minLength;
+				}
+				if (i == j) {
+					arr[i][j].length = 0;
 				}
 			}
-
-		} while (!stack.isEmpty());
-		System.out.println("i will end");
-	}
-
-	public static void getLengthAndCost(int currentLength, int currentCost,
-			int currentPosition, String luXian) {
-		if (currentLength > currentMinLength) {
-			return;
 		}
-		if (currentPosition == toCity) {
-			if (currentLength > currentMinLength) {
-				return;
-			} else if (currentLength == currentMinLength) {
-				if (currentCost < currentMinCost) {
-					minLine = luXian.toString();
+		scanner.close();
+
+		List<CostAndLength> costAndLengths = new ArrayList<CostAndLength>(
+				useCityCount);
+		List<Integer> unArriveCityIntegers = new ArrayList<Integer>();
+		for (int i = fromCity + 1; i <= toCity; i++) {
+			unArriveCityIntegers.add(i);
+		}
+		for (int i = fromCity; i <= toCity; i++) {
+			CostAndLength costAndLength = arr[fromCity][i];
+			costAndLength.cityList.add(i);
+			costAndLengths.add(costAndLength);
+
+		}
+
+		int currentCity = fromCity;
+		while (!(currentCity == toCity)) {
+			for (int i = currentCity + 1; i <= toCity; i++) {
+
+				int thisLength = arr[currentCity][i].length
+						+ costAndLengths.get(currentCity).length;
+				if (thisLength <= costAndLengths.get(i).length) {
+					costAndLengths.get(i).length = thisLength;
+					costAndLengths.get(i).cityList = new ArrayList<Integer>(
+							costAndLengths.get(currentCity).cityList);
+					costAndLengths.get(i).cityList.add(i);
 				}
-				currentMinCost = Math.min(currentMinCost, currentCost);
-			} else {
-				currentMinCost = currentCost;
-				currentMinLength = currentLength;
-				minLine = luXian.toString();
-			}
 
-			return;
+			}
+			for (Integer integer : unArriveCityIntegers) {
+				if (costAndLengths.get(integer - fromCity).length <= minLength.length) {
+					minLength = costAndLengths.get(integer - fromCity);
+				}
+			}
+			List<Integer> tempCityList = minLength.cityList;
+			Integer cityToAdd = tempCityList.get(tempCityList.size() - 1);
+			currentCity = cityToAdd;
+
 		}
-		List<Line> list = lineMap.get(currentPosition);
-		for (Line line : list) {
-			getLengthAndCost(currentLength + line.length, currentCost
-					+ line.cost, line.to, luXian + line.to + " ");
-		}
+		System.out.println(costAndLengths.get(3).cityList);
+		;
 
 	}
 }
@@ -102,5 +100,21 @@ class Line {
 		to = Integer.valueOf(inputs[1]);
 		length = Integer.valueOf(inputs[2]);
 		cost = Integer.valueOf(inputs[3]);
+	}
+}
+
+class CostAndLength {
+	int length;
+	int cost;
+	List<Integer> cityList = new ArrayList<Integer>();
+
+	public CostAndLength(int length, int cost) {
+		super();
+		this.length = length;
+		this.cost = cost;
+	}
+
+	public String toString() {
+		return "length " + length + " cost " + cost;
 	}
 }
