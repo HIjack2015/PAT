@@ -1,28 +1,28 @@
 package a;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Stack;
 
-public class TravelPlan {
-	static int toCity;
-	static int currentMinLength = Integer.MAX_VALUE;
-	static int currentMinCost = Integer.MAX_VALUE;
-	static HashMap<Integer, List<Line>> lineMap;
-	static String minLine = "";
+public class TravelPlan implements Solution {
+	int fromCity;
+	int toCity;
+	int cityCount;
 
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		int cityCount = scanner.nextInt();
+	List<CostAndLength> costAndLengths;
+	CostAndLength[][] arr;
+	List<Integer> unArriveCitys;
+
+	CostAndLength minLength;
+
+	@Override
+	public void input() {
+
+		cityCount = scanner.nextInt();
 		int lineCount = scanner.nextInt();
-		int fromCity = scanner.nextInt();
-
+		fromCity = scanner.nextInt();
 		toCity = scanner.nextInt();
-		int useCityCount = toCity - fromCity + 1;
-		CostAndLength[][] arr = new CostAndLength[useCityCount][useCityCount];
+
+		arr = new CostAndLength[cityCount][cityCount];
 		for (int i = lineCount; i > 0;) {
 			String input = scanner.nextLine();
 			if (input.length() < 2) {
@@ -32,59 +32,88 @@ public class TravelPlan {
 			arr[line.from][line.to] = new CostAndLength(line.length, line.cost);
 			i--;
 		}
-		CostAndLength minLength = new CostAndLength(100000, 100000);
+
+		scanner.close();
+
+	}
+
+	public void initial() {
+		// 填充数组中空白元素
+		CostAndLength maxLength = new CostAndLength(100000, 100000);
+		CostAndLength minLength = new CostAndLength(0, 0);
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr.length; j++) {
 				if (arr[i][j] == null) {
-					arr[i][j] = minLength;
+					arr[i][j] = maxLength;
 				}
 				if (i == j) {
-					arr[i][j].length = 0;
+					arr[i][j] = minLength;
 				}
 			}
 		}
-		scanner.close();
-
-		List<CostAndLength> costAndLengths = new ArrayList<CostAndLength>(
-				useCityCount);
-		List<Integer> unArriveCityIntegers = new ArrayList<Integer>();
+		// 初始化 costAndLength
+		costAndLengths = new ArrayList<CostAndLength>(cityCount);
+		unArriveCitys = new ArrayList<Integer>();
 		for (int i = fromCity + 1; i <= toCity; i++) {
-			unArriveCityIntegers.add(i);
+			unArriveCitys.add(i);
 		}
+
 		for (int i = fromCity; i <= toCity; i++) {
 			CostAndLength costAndLength = arr[fromCity][i];
 			costAndLength.cityList.add(i);
 			costAndLengths.add(costAndLength);
 
 		}
+	}
+
+	@Override
+	public void deal() {
+		initial();
 
 		int currentCity = fromCity;
-		while (!(currentCity == toCity)) {
-			for (int i = currentCity + 1; i <= toCity; i++) {
+		while (true) {
+			for (int i = 0; i < unArriveCitys.size(); i++) {
+				int nextCity = unArriveCitys.get(i);
 
-				int thisLength = arr[currentCity][i].length
+				int thisLength = arr[currentCity][nextCity].length
 						+ costAndLengths.get(currentCity).length;
-				if (thisLength <= costAndLengths.get(i).length) {
-					costAndLengths.get(i).length = thisLength;
-					costAndLengths.get(i).cityList = new ArrayList<Integer>(
+				int thisCost = arr[currentCity][nextCity].cost
+						+ costAndLengths.get(currentCity).cost;
+				CostAndLength currentCost = costAndLengths.get(nextCity);
+				if (thisLength < currentCost.length
+						|| (thisLength == currentCost.length && thisCost < currentCost.cost)) {
+					currentCost.length = thisLength;
+					currentCost.cost = thisCost;
+
+					currentCost.cityList = new ArrayList<Integer>(
 							costAndLengths.get(currentCity).cityList);
-					costAndLengths.get(i).cityList.add(i);
+					currentCost.cityList.add(nextCity);
 				}
 
 			}
-			for (Integer integer : unArriveCityIntegers) {
-				if (costAndLengths.get(integer - fromCity).length <= minLength.length) {
-					minLength = costAndLengths.get(integer - fromCity);
+			minLength = new CostAndLength(200000, 10);
+			Integer minCity = 0;
+			for (Integer city : unArriveCitys) {
+				if (costAndLengths.get(city).littleThan(minLength)) { // 此处应该选cost最小的
+					minLength = costAndLengths.get(city);
+					minCity = city;
 				}
 			}
-			List<Integer> tempCityList = minLength.cityList;
-			Integer cityToAdd = tempCityList.get(tempCityList.size() - 1);
-			currentCity = cityToAdd;
-
+			currentCity = minCity;
+			unArriveCitys.remove(minCity);
+			if (currentCity == toCity) {
+				break;
+			}
 		}
-		System.out.println(costAndLengths.get(3).cityList);
-		;
+	}
 
+	@Override
+	public void output() {
+		System.out.print(fromCity + " ");
+		for (Integer city : minLength.cityList) {
+			System.out.print(city + " ");
+		}
+		System.out.print(minLength.length + " " + minLength.cost);
 	}
 }
 
@@ -117,4 +146,13 @@ class CostAndLength {
 	public String toString() {
 		return "length " + length + " cost " + cost;
 	}
+
+	public boolean littleThan(CostAndLength c) {
+		if (length < c.length || (length == c.length && cost < c.cost)) {
+			return true;
+
+		}
+		return false;
+	}
+
 }

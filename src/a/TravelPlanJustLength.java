@@ -63,4 +63,8 @@ public class TravelPlanJustLength {
 		}
 		return minCity;
 	}
+	//需要加上路径
+	//，cost
+	//输入
+	//
 }

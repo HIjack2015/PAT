@@ -38,7 +38,7 @@ public class CountingLeaves {
 
 	public static void dealOneLine(String input) {
 		String[] inputs = input.split(" ");
-		Node thisNode = CountingLeaves.relation.get(Integer.valueOf(inputs[0]));
+		Node thisNode = relation.get(Integer.valueOf(inputs[0]));
 		if (thisNode == null) {
 			thisNode = new Node();
 			thisNode.level = 0;
