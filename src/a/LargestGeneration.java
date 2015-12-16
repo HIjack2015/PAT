@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class LargestGeneration implements Solution {
+public class LargestGeneration extends MiddleSolution {
 
 	public static HashMap<Integer, Node> relation = new HashMap<Integer, Node>();
 	int maxLevel = 0;

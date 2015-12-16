@@ -57,7 +57,7 @@ class Student3 implements Comparable<Student3> {
 		this.studentNo = infos[0];
 		this.grade = Integer.valueOf(infos[2]);
 		this.sortBy = sortBy;
-		// 这样写很蠢,但是少写好几行...
+
 	}
 
 	public void print() {

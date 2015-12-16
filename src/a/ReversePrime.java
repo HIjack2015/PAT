@@ -1,8 +1,7 @@
 package a;
 
-import a.Solution;
 
-public class ReversePrime implements Solution {
+public class ReversePrime extends MiddleSolution {
 
 	@Override
 	public void input() {

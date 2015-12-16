@@ -3,7 +3,7 @@ package a;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-public class HaveFunWithNumbers implements Solution {
+public class HaveFunWithNumbers extends MiddleSolution {
 
 	BigInteger input;
 	Boolean equal = true;
@@ -35,5 +35,6 @@ public class HaveFunWithNumbers implements Solution {
 		System.out.println(equal ? "Yes" : "No");
 		System.out.println(doubleInput);
 	}
+
 
 }

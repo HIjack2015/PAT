@@ -12,7 +12,7 @@ public class CountingLeaves {
 
 	public static void main(String args[]) {
 		Scanner scanner = new Scanner(System.in);
-		int allNodes = scanner.nextInt();
+		scanner.nextInt();
 		int nonLeafNodeCount = scanner.nextInt();
 		for (int i = nonLeafNodeCount; i > 0; i--) {
 			String nextLine = scanner.nextLine();
@@ -34,6 +34,7 @@ public class CountingLeaves {
 		}
 		System.out
 				.println(resultBuffer.substring(0, resultBuffer.length() - 1));
+		scanner.close();
 	}
 
 	public static void dealOneLine(String input) {

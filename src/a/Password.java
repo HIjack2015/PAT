@@ -37,7 +37,7 @@ public class Password {
 				System.out.println(string);
 			}
 		}
-
+		scanner.close();
 	}
 
 	public static String getUnPazzlePassword(String input) {

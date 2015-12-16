@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Palindromic implements Solution {
+public class Palindromic extends MiddleSolution{
 
 	long input;
 	long radix;

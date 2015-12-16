@@ -2,8 +2,6 @@ package a;
 
 import java.util.Scanner;
 
-import javax.xml.transform.Templates;
-
 public class MaxSubSum {
 	public static void main(String args[]) {
 		Scanner scanner = new Scanner(System.in);

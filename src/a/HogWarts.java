@@ -1,7 +1,7 @@
 package a;
 
 
-public class HogWarts implements Solution {
+public class HogWarts extends MiddleSolution {
 
 	@Override
 	public void input() {

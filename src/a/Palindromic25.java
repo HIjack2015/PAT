@@ -2,7 +2,7 @@ package a;
 
 import java.math.BigInteger;
 
-public class Palindromic25 implements Solution {
+public class Palindromic25 extends MiddleSolution {
 	BigInteger input;
 	int step;
 	int useStep;
